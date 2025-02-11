@@ -1,0 +1,459 @@
+CREATE TABLE Categories (
+    CategoryID INT PRIMARY KEY,
+    CategoryName VARCHAR(100),
+    Description VARCHAR(255)  -- Adjusted from TEXT to VARCHAR(255)
+);
+
+CREATE TABLE Products (
+    ProductID INT PRIMARY KEY,
+    ProductName VARCHAR(100),
+    CategoryID INT,
+    Price DECIMAL(10, 2),
+    FOREIGN KEY (CategoryID) REFERENCES Categories(CategoryID)
+);
+
+
+INSERT INTO Categories (CategoryID, CategoryName, Description)
+VALUES (1, 'Electronics', 'Devices and gadgets including phones, laptops, and accessories');
+INSERT INTO Categories (CategoryID, CategoryName, Description)
+VALUES (2, 'Clothing', 'Apparel for men, women, and children');
+INSERT INTO Categories (CategoryID, CategoryName, Description)
+VALUES (3, 'Home & Kitchen', 'Furniture, appliances, and kitchen tools');
+
+
+
+
+INSERT INTO Products (ProductID, ProductName, CategoryID, Price)
+VALUES (1, 'Laptop', 1, 899.99);
+
+INSERT INTO Products (ProductID, ProductName, CategoryID, Price)
+VALUES (2, 'Smartphone', 1, 699.99);
+
+INSERT INTO Products (ProductID, ProductName, CategoryID, Price)
+VALUES (3, 'Jeans', 2, 49.99);
+
+INSERT INTO Products (ProductID, ProductName, CategoryID, Price)
+VALUES (4, 'T-shirt', 2, 19.99);
+
+INSERT INTO Products (ProductID, ProductName, CategoryID, Price)
+VALUES (5, 'Blender', 3, 59.99);
+
+INSERT INTO Products (ProductID, ProductName, CategoryID, Price)
+VALUES (6, 'Microwave', 3, 119.99);
+
+INSERT INTO Products (ProductID, ProductName, CategoryID, Price)
+VALUES (7, 'Basketball', 4, 29.99);
+
+INSERT INTO Products (ProductID, ProductName, CategoryID, Price)
+VALUES (8, 'Tennis Racket', 4, 49.99);
+
+INSERT INTO Products (ProductID, ProductName, CategoryID, Price)
+VALUES (9, 'Doll', 5, 14.99);
+
+INSERT INTO Products (ProductID, ProductName, CategoryID, Price)
+VALUES (10, 'Action Figure', 5, 24.99);
+
+
+  INNERJOIN
+
+
+SELECT p.ProductID, p.ProductName, c.CategoryName, p.Price
+FROM Products p
+INNER JOIN Categories c ON p.CategoryID = c.CategoryID
+ORDER BY p.Price;
+
+
+\\FULL JOIN
+SELECT p.ProductID, p.ProductName, p.Price, c.CategoryName
+FROM Products p
+FULL JOIN Categories c ON p.CategoryID = c.CategoryID
+ORDER BY p.Price;
+
+SELECT p.ProductID, p.ProductName, p.Price, c.CategoryName
+FROM Products p
+FULL JOIN Categories c ON p.CategoryID = c.CategoryID
+WHERE p.Price=(SELECT MIN(Price) FROM Products);
+
+---------------------------------------------------------------------------------------
+
+SQL*Plus: Release 10.2.0.1.0 - Production on Fri Feb 7 14:36:47 2025
+
+Copyright (c) 1982, 2005, Oracle.  All rights reserved.
+
+SQL> connect system
+Enter password:
+Connected.
+SQL> CREATE TABLE Categories (
+  2      CategoryID INT PRIMARY KEY,                     -- Primary Key for the category
+  3      CategoryName VARCHAR2(100) NOT NULL,             -- Category name (up to 100 characters)
+  4      Description VARCHAR2(255)                        -- Category description (up to 255 characters)
+  5  );
+CREATE TABLE Categories (
+             *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+SQL> drop table categories;
+
+Table dropped.
+
+SQL> CREATE TABLE Categories (
+  2      CategoryID INT PRIMARY KEY,                     -- Primary Key for the category
+  3      CategoryName VARCHAR2(100) NOT NULL,             -- Category name (up to 100 characters)
+  4      Description VARCHAR2(255)                        -- Category description (up to 255 characters)
+  5  );
+
+Table created.
+
+SQL> INSERT INTO Categories (CategoryID, CategoryName, Description) VALUES (1, 'Electronics', 'Devices, gadgets, and electronics');
+
+1 row created.
+
+SQL> INSERT INTO Categories (CategoryID, CategoryName, Description) VALUES (2, 'Clothing', 'Apparel and fashion items');
+
+1 row created.
+
+SQL> INSERT INTO Categories (CategoryID, CategoryName, Description) VALUES (3, 'Furniture', 'Home and office furniture');
+
+1 row created.
+
+SQL> CREATE TABLE Products (
+  2      ProductID INT PRIMARY KEY,                      -- Primary Key for the product
+  3      ProductName VARCHAR2(100) NOT NULL,              -- Product name (up to 100 characters)
+  4      CategoryID INT,                                 -- Foreign Key to the Categories table
+  5      Price DECIMAL(10, 2),                           -- Price of the product (10 digits, 2 decimal points)
+  6      CONSTRAINT fk_category FOREIGN KEY (CategoryID) REFERENCES Categories(CategoryID)  -- Foreign Key constraint
+  7  );
+
+Table created.
+
+SQL> INSERT INTO Products (ProductID, ProductName, CategoryID, Price) VALUES (101, 'Laptop', 1, 1200.00);
+
+1 row created.
+
+SQL> INSERT INTO Products (ProductID, ProductName, CategoryID, Price) VALUES (102, 'T-Shirt', 2, 25.00);
+
+1 row created.
+
+SQL> INSERT INTO Products (ProductID, ProductName, CategoryID, Price) VALUES (103, 'Sofa', 3, 500.00);
+
+1 row created.
+
+SQL> select * from products;
+
+ PRODUCTID
+----------
+PRODUCTNAME
+--------------------------------------------------------------------------------
+CATEGORYID      PRICE
+---------- ----------
+       101
+Laptop
+         1       1200
+
+       102
+T-Shirt
+         2         25
+
+ PRODUCTID
+----------
+PRODUCTNAME
+--------------------------------------------------------------------------------
+CATEGORYID      PRICE
+---------- ----------
+
+       103
+Sofa
+         3        500
+
+
+SQL> select * from categories;
+
+CATEGORYID
+----------
+CATEGORYNAME
+--------------------------------------------------------------------------------
+DESCRIPTION
+--------------------------------------------------------------------------------
+         1
+Electronics
+Devices, gadgets, and electronics
+
+         2
+Clothing
+Apparel and fashion items
+
+CATEGORYID
+----------
+CATEGORYNAME
+--------------------------------------------------------------------------------
+DESCRIPTION
+--------------------------------------------------------------------------------
+
+         3
+Furniture
+Home and office furniture
+
+
+SQL> COLUMN ProductID FORMAT 9999;
+SQL> COLUMN ProductName FORMAT A20;
+SQL> COLUMN CategoryID FORMAT 999;
+SQL> COLUMN Price FORMAT 9999.99;
+SQL> select * from products;
+
+PRODUCTID PRODUCTNAME          CATEGORYID    PRICE
+--------- -------------------- ---------- --------
+      101 Laptop                        1  1200.00
+      102 T-Shirt                       2    25.00
+      103 Sofa                          3   500.00
+
+SQL> -- Format ProductID to be 5 digits wide
+SQL> COLUMN ProductID FORMAT 99999;
+SQL>
+SQL> -- Format ProductName to be 20 characters wide for better readability
+SQL> COLUMN ProductName FORMAT A20;
+SQL>
+SQL> -- Format CategoryID to be 3 digits wide
+SQL> COLUMN CategoryID FORMAT 999;
+SQL>
+SQL> -- Format Price to show two decimal places
+SQL> COLUMN Price FORMAT 9999.99;
+SQL>
+SQL> -- Display the Products table
+SQL> SELECT * FROM Products;
+
+PRODUCTID PRODUCTNAME          CATEGORYID    PRICE
+--------- -------------------- ---------- --------
+      101 Laptop                        1  1200.00
+      102 T-Shirt                       2    25.00
+      103 Sofa                          3   500.00
+
+SQL> -- Format CategoryID to display 3 digits
+SQL> COLUMN CategoryID FORMAT 999;
+SQL>
+SQL> -- Format CategoryName to be 20 characters wide for better readability
+SQL> COLUMN CategoryName FORMAT A20;
+SQL>
+SQL> -- Format Description to display up to 50 characters
+SQL> COLUMN Description FORMAT A50;
+SQL>
+SQL> -- Display the Categories table
+SQL> SELECT * FROM Categories;
+
+CATEGORYID CATEGORYNAME
+---------- --------------------
+DESCRIPTION
+--------------------------------------------------
+         1 Electronics
+Devices, gadgets, and electronics
+
+         2 Clothing
+Apparel and fashion items
+
+         3 Furniture
+Home and office furniture
+
+
+SQL> -- Format CategoryID to be 3 digits wide
+SQL> COLUMN CategoryID FORMAT 999;
+SQL>
+SQL> -- Format CategoryName to be 20 characters wide
+SQL> COLUMN CategoryName FORMAT A20;
+SQL>
+SQL> -- Format Description to be 50 characters wide
+SQL> COLUMN Description FORMAT A50;
+SQL>
+SQL> -- Display the Categories table
+SQL> SELECT * FROM Categories;
+
+CATEGORYID CATEGORYNAME
+---------- --------------------
+DESCRIPTION
+--------------------------------------------------
+         1 Electronics
+Devices, gadgets, and electronics
+
+         2 Clothing
+Apparel and fashion items
+
+         3 Furniture
+Home and office furniture
+
+
+SQL> -- Set the line size to allow more characters per line (for wider descriptions)
+SQL> SET LINESIZE 200;
+SQL>
+SQL> -- Format CategoryID to be 3 digits wide
+SQL> COLUMN CategoryID FORMAT 999;
+SQL>
+SQL> -- Format CategoryName to be 20 characters wide
+SQL> COLUMN CategoryName FORMAT A20;
+SQL>
+SQL> -- Format Description to be 50 characters wide (or increase if needed)
+SQL> COLUMN Description FORMAT A50;
+SQL>
+SQL> -- Display the Categories table
+SQL> SELECT * FROM Categories;
+
+CATEGORYID CATEGORYNAME         DESCRIPTION
+---------- -------------------- --------------------------------------------------
+         1 Electronics          Devices, gadgets, and electronics
+         2 Clothing             Apparel and fashion items
+         3 Furniture            Home and office furniture
+
+SQL> SELECT p.ProductID, p.ProductName, c.CategoryName, p.Price
+  2  FROM Products p
+  3  INNER JOIN Categories c ON p.CategoryID = c.CategoryID
+  4  ORDER BY p.Price;
+
+PRODUCTID PRODUCTNAME          CATEGORYNAME            PRICE
+--------- -------------------- -------------------- --------
+      102 T-Shirt              Clothing                25.00
+      103 Sofa                 Furniture              500.00
+      101 Laptop               Electronics           1200.00
+
+SQL> SELECT p.ProductID, p.ProductName, c.CategoryName, p.Price
+  2  FROM Products p
+  3  LEFT JOIN Categories c ON p.CategoryID = c.CategoryID
+  4  WHERE p.ProductName = 'Laptop';
+
+PRODUCTID PRODUCTNAME          CATEGORYNAME            PRICE
+--------- -------------------- -------------------- --------
+      101 Laptop               Electronics           1200.00
+
+SQL> SELECT p.ProductID, p.ProductName, c.CategoryName, p.Price
+  2  FROM Products p
+  3  RIGHT JOIN Categories c ON p.CategoryID = c.CategoryID
+  4  WHERE c.CategoryName = 'Clothing';
+
+PRODUCTID PRODUCTNAME          CATEGORYNAME            PRICE
+--------- -------------------- -------------------- --------
+      102 T-Shirt              Clothing                25.00
+
+SQL> SELECT p.ProductID, p.ProductName, c.CategoryName, p.Price
+  2  FROM Products p
+  3  FULL JOIN Categories c ON p.CategoryID = c.CategoryID
+  4  ORDER BY p.Price ASC
+  5  LIMIT 1; -- to get the minimum price
+  6
+SQL> SELECT p.ProductID, p.ProductName, c.CategoryName, p.Price
+  2  FROM Products p
+  3  FULL JOIN Categories c ON p.CategoryID = c.CategoryID
+  4  ORDER BY p.Price ASC
+  5  LIMIT 1; -- to get the minimum price
+  6
+SQL> SELECT p.ProductID, p.ProductName, c.CategoryName, p.Price
+  2  FROM Products p
+  3  FULL JOIN Categories c ON p.CategoryID = c.CategoryID
+  4  ORDER BY p.Price ASC
+  5  FETCH FIRST 1 ROWS ONLY;
+FETCH FIRST 1 ROWS ONLY
+*
+ERROR at line 5:
+ORA-00933: SQL command not properly ended
+
+
+SQL> SELECT p.ProductID, p.ProductName, c.CategoryName, p.Price
+  2  FROM (
+  3      SELECT p.ProductID, p.ProductName, c.CategoryName, p.Price
+  4      FROM Products p
+  5      FULL JOIN Categories c ON p.CategoryID = c.CategoryID
+  6      ORDER BY p.Price ASC
+  7  )
+  8  WHERE ROWNUM = 1;
+SELECT p.ProductID, p.ProductName, c.CategoryName, p.Price
+                                                   *
+ERROR at line 1:
+ORA-00904: "P"."PRICE": invalid identifier
+
+
+SQL> SELECT p.ProductID, p.ProductName, c.CategoryName, p.Price
+  2  FROM (
+  3      SELECT p.ProductID, p.ProductName, c.CategoryName, p.Price
+  4      FROM Products p
+  5      FULL JOIN Categories c ON p.CategoryID = c.CategoryID
+  6      ORDER BY p.Price ASC
+  7  )
+  8  WHERE ROWNUM = 1;
+SELECT p.ProductID, p.ProductName, c.CategoryName, p.Price
+                                                   *
+ERROR at line 1:
+ORA-00904: "P"."PRICE": invalid identifier
+
+
+SQL> select * from products;
+
+PRODUCTID PRODUCTNAME          CATEGORYID    PRICE
+--------- -------------------- ---------- --------
+      101 Laptop                        1  1200.00
+      102 T-Shirt                       2    25.00
+      103 Sofa                          3   500.00
+
+SQL> SELECT p.ProductID, p.ProductName, c.CategoryName, p.Price
+  2  FROM (
+  3      SELECT p.ProductID, p.ProductName, c.CategoryName, COALESCE(p.Price, 0) AS Price
+  4      FROM Products p
+  5      FULL JOIN Categories c ON p.CategoryID = c.CategoryID
+  6      ORDER BY p.Price ASC
+  7  )
+  8  WHERE ROWNUM = 1;
+SELECT p.ProductID, p.ProductName, c.CategoryName, p.Price
+                                                   *
+ERROR at line 1:
+ORA-00904: "P"."PRICE": invalid identifier
+
+
+SQL> SELECT p.ProductID, p.ProductName, c.CategoryName, p.Price
+  2  FROM Products p
+  3  LEFT JOIN Categories c ON p.CategoryID = c.CategoryID
+  4  ORDER BY p.Price ASC
+  5  FETCH FIRST 1 ROWS ONLY;
+FETCH FIRST 1 ROWS ONLY
+*
+ERROR at line 5:
+ORA-00933: SQL command not properly ended
+
+
+SQL> SELECT p.ProductID, p.ProductName, c.CategoryName, p.Price
+  2  FROM (
+  3      SELECT p.ProductID, p.ProductName, c.CategoryName, p.Price
+  4      FROM Products p
+  5      LEFT JOIN Categories c ON p.CategoryID = c.CategoryID
+  6      ORDER BY p.Price ASC
+  7  )
+  8  WHERE ROWNUM = 1;
+SELECT p.ProductID, p.ProductName, c.CategoryName, p.Price
+                                                   *
+ERROR at line 1:
+ORA-00904: "P"."PRICE": invalid identifier
+
+
+SQL> SELECT p.ProductID, p.ProductName, p.Price, c.CategoryName
+  2  FROM Products p
+  3  FULL JOIN Categories c ON p.CategoryID = c.CategoryID
+  4  ORDER BY p.Price;
+
+PRODUCTID PRODUCTNAME             PRICE CATEGORYNAME
+--------- -------------------- -------- --------------------
+      102 T-Shirt                 25.00 Clothing
+      103 Sofa                   500.00 Furniture
+      101 Laptop                1200.00 Electronics
+
+SQL> SELECT p.ProductID, p.ProductName, p.Price, c.CategoryName
+  2  FROM Products p
+  3  NATURAL JOIN Categories c
+  4  WHERE p.Price = (SELECT MAX(Price) FROM Products);
+
+PRODUCTID PRODUCTNAME             PRICE CATEGORYNAME
+--------- -------------------- -------- --------------------
+      101 Laptop                1200.00 Electronics
+
+SQL> SELECT p.ProductID, p.ProductName, p.Price, c.CategoryName
+  2  FROM Products p
+  3  FULL JOIN Categories c ON p.CategoryID = c.CategoryID
+  4  WHERE p.Price=(SELECT MIN(Price) FROM Products);
+
+PRODUCTID PRODUCTNAME             PRICE CATEGORYNAME
+--------- -------------------- -------- --------------------
+      102 T-Shirt                 25.00 Clothing

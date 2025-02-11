@@ -1,0 +1,124 @@
+CREATE TABLE Sailors (
+    Sid INT PRIMARY KEY,  
+    Sname VARCHAR(50),    
+    Rating INT,          
+    Age INT               
+);
+
+
+
+INSERT INTO Sailors (Sid, Sname, Rating, Age) VALUES (1, 'John', 5, 25);
+INSERT INTO Sailors (Sid, Sname, Rating, Age) VALUES (2, 'Jane', 7, 22);
+INSERT INTO Sailors (Sid, Sname, Rating, Age) VALUES (3, 'Mark', 6, 30);
+
+
+
+CREATE TABLE Boats (
+    Bid INT PRIMARY KEY,  
+    Bname VARCHAR(50),    
+    Color VARCHAR(20)    
+);
+
+INSERT INTO Boats (Bid, Bname, Color) VALUES (101, 'Boat1', 'Red');
+INSERT INTO Boats (Bid, Bname, Color) VALUES (102, 'Boat2', 'Blue');
+INSERT INTO Boats (Bid, Bname, Color) VALUES (103, 'Boat3', 'Red');
+
+
+
+CREATE TABLE Reserves (
+    Sid INT,              
+    Bid INT,              
+    Day DATE,            
+    PRIMARY KEY (Sid, Bid, Day),  
+    FOREIGN KEY (Sid) REFERENCES Sailors(Sid),
+    FOREIGN KEY (Bid) REFERENCES Boats(Bid)
+);
+
+
+INSERT INTO Reserves (Sid, Bid, Day) VALUES (1, 101, TO_DATE('2025-02-10', 'YYYY-MM-DD'));
+INSERT INTO Reserves (Sid, Bid, Day) VALUES (1, 103, TO_DATE('2025-02-10', 'YYYY-MM-DD'));
+INSERT INTO Reserves (Sid, Bid, Day) VALUES (2, 102, TO_DATE('2025-02-11', 'YYYY-MM-DD'));
+-----------------------------------------------------------------------------------------
+COLUMN Sid FORMAT 999;
+COLUMN Sname FORMAT A20;
+COLUMN Rating FORMAT 999;
+COLUMN Age FORMAT 999;
+
+SELECT * FROM Sailors;
+
+
+COLUMN Bid FORMAT 999;
+COLUMN Bname FORMAT A20;
+COLUMN Color FORMAT A15;
+
+SELECT * FROM Boats;
+
+
+COLUMN Sid FORMAT 999;
+COLUMN Bid FORMAT 999;
+COLUMN Day FORMAT A15;
+
+SELECT * FROM Reserves;
+--------------------------------------------
+a)
+SELECT *
+FROM Sailors
+WHERE Sid IN (
+    SELECT Sid
+    FROM Reserves
+    WHERE Bid IN (101, 103)
+);
+
+b)
+SELECT DISTINCT Sname
+FROM Sailors
+WHERE Sid IN (
+    SELECT Sid
+    FROM Reserves
+);
+c)
+SELECT DISTINCT Sname, Age
+FROM Sailors
+WHERE Sid IN (
+    SELECT Sid
+    FROM Reserves
+    WHERE Bid IN (
+        SELECT Bid
+        FROM Boats
+        WHERE Color = 'Red'
+    )
+)
+ORDER BY Age;
+d)
+SELECT DISTINCT R1.Sid, S.Sname
+FROM Reserves R1, Reserves R2, Sailors S
+WHERE R1.Sid = R2.Sid 
+  AND R1.Sid = S.Sid
+  AND R1.Day = R2.Day
+  AND R1.Bid <> R2.Bid;
+e)
+SELECT Sname, Age
+FROM Sailors
+WHERE Age = (
+    SELECT MIN(Age)
+    FROM Sailors
+);
+f)
+SELECT Sname
+FROM Sailors
+WHERE NOT EXISTS (
+    SELECT Bid
+    FROM Boats
+    WHERE NOT EXISTS (
+        SELECT *
+        FROM Reserves
+        WHERE Reserves.Sid = Sailors.Sid
+        AND Reserves.Bid = Boats.Bid
+    )
+);
+
+
+
+
+
+
