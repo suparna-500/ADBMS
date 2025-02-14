@@ -1,0 +1,13 @@
+-- Creating the Savings_Transaction table
+CREATE TABLE Savings_Transaction (
+    CustomerID INT,
+    Name VARCHAR(100),
+    TransactionAmount DECIMAL(10, 2)
+);
+
+-- Creating the CreditCard_Transaction table
+CREATE TABLE CreditCard_Transaction (
+    CustomerID INT,
+    Name VARCHAR(100),
+    TransactionAmount DECIMAL(10, 2)
+);
