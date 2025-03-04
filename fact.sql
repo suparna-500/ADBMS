@@ -1,4 +1,4 @@
--- Accept input from the user
+
 ACCEPT num NUMBER PROMPT 'Enter a number: ';
 
 DECLARE
